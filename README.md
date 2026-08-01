@@ -42,6 +42,7 @@ Ferramenta de recuperação de senhas para arquivos criptografados com OpenSSL (
 
 # Usando PBKDF2
 ./bruteforce -file segredo.enc -pbkdf2 -min 4 -max 6
+```
 
 ## License
 
