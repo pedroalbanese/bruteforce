@@ -678,10 +678,16 @@ func bruteForceWithMethod(config *Config, salt, ciphertext []byte, method string
 	return ""
 }
 
+const (
+	Version     = "0.0.0"
+	VersionDate = "02 Sep 2026"
+	AppName     = "Bruteforce Salted OpenSSL"
+)
+
 // --- Main ---
 func main() {
 	var config Config
-
+	version := flag.Bool("version", false, "Print version info")
 	flag.StringVar(&config.FilePath, "file", "", "Path to the encrypted file (required)")
 	flag.IntVar(&config.MinLen, "min", 1, "Minimum password length")
 	flag.IntVar(&config.MaxLen, "max", 8, "Maximum password length")
@@ -699,6 +705,13 @@ func main() {
 	flag.StringVar(&config.Cipher, "cipher", "aes-256-cbc", "Cipher algorithm (e.g., aes-256-cbc, des3, bf, rc4)")
 	flag.Parse()
 
+	if *version {
+		fmt.Printf("%s v%s (%s)\n", AppName, Version, VersionDate)
+		fmt.Printf("Built with Go %s\n", runtime.Version())
+		fmt.Printf("Supported ciphers: AES, ARIA, Camellia, SM4, Blowfish, DES, 3DES, CAST5, RC2, RC4\n")
+		os.Exit(0)
+	}
+	
 	if config.FilePath == "" {
 		fmt.Println("ERROR: -file is required")
 		flag.Usage()
