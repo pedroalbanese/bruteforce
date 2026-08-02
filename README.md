@@ -1,4 +1,9 @@
 # BruteForce-Salted-OpenSSL
+[![ISC License](http://img.shields.io/badge/license-ISC-blue.svg)](https://github.com/pedroalbanese/bruteforce/blob/master/LICENSE.md) 
+[![GoDoc](https://godoc.org/github.com/pedroalbanese/bruteforce?status.png)](http://godoc.org/github.com/pedroalbanese/bruteforce)
+[![GitHub downloads](https://img.shields.io/github/downloads/pedroalbanese/bruteforce/total.svg?logo=github&logoColor=white)](https://github.com/pedroalbanese/bruteforce/releases)
+[![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/pedroalbanese/bruteforce)](https://golang.org)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/pedroalbanese/bruteforce)](https://github.com/pedroalbanese/bruteforce/releases)
 
 Ferramenta de recuperação de senhas para arquivos criptografados com OpenSSL, escrita em Go puro.
 
