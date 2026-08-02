@@ -1,6 +1,6 @@
 # BruteForce-Salted-OpenSSL
 
-Ferramenta de recuperação de senhas para arquivos criptografados com OpenSSL (aes-256-cbc), escrita em Go puro.
+Ferramenta de recuperação de senhas para arquivos criptografados com OpenSSL, escrita em Go puro.
 
 ## Características
 
