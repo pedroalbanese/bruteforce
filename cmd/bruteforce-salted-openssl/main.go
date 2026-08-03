@@ -23,6 +23,7 @@ import (
 
 	"github.com/pedroalbanese/camellia"
 	"github.com/RyuaNerin/go-krypto/aria"
+	"github.com/RyuaNerin/go-krypto/seed"
 	"github.com/emmansun/gmsm/sm4"
 	"github.com/pedroalbanese/rc2"
 )
@@ -73,6 +74,10 @@ func rc2NewCipher(key []byte) (cipher.Block, error) {
 
 func sm4NewCipher(key []byte) (cipher.Block, error) {
 	return sm4.NewCipher(key)
+}
+
+func seedNewCipher(key []byte) (cipher.Block, error) {
+	return seed.NewCipher(key)
 }
 
 // RC4 não implementa cipher.Block, então usamos uma estrutura wrapper
@@ -167,6 +172,14 @@ var cipherRegistry = map[string]CipherInfo{
 	"camellia128": {"camellia-128-cbc", 16, 16, 16, camellia.NewCipher, false},
 	"camellia192": {"camellia-192-cbc", 24, 16, 16, camellia.NewCipher, false},
 	"camellia256": {"camellia-256-cbc", 32, 16, 16, camellia.NewCipher, false},
+
+	// SEED
+	"seed":     {"seed", 16, 16, 16, seedNewCipher, false},
+	"seed-cbc": {"seed-cbc", 16, 16, 16, seedNewCipher, false},
+	"seed-ctr": {"seed-ctr", 16, 16, 16, seedNewCipher, false},
+	"seed-ecb": {"seed-ecb", 16, 0, 16, seedNewCipher, false},
+	"seed-cfb": {"seed-cfb", 16, 16, 16, seedNewCipher, false},
+	"seed-ofb": {"seed-ofb", 16, 16, 16, seedNewCipher, false},
 
 	// SM4
 	"sm4":     {"sm4", 16, 16, 16, sm4NewCipher, false},
@@ -324,10 +337,10 @@ func decryptAttempt(ciphertext, salt, password []byte, config *Config, cipherInf
 
 	// Detectar modo baseado no nome da cifra para block ciphers
 	cipherName := config.Cipher
-	isECB := stringsHasSuffix(cipherName, "-ecb") || cipherName == "des-ecb" || cipherName == "aes-128-ecb" || cipherName == "aes-192-ecb" || cipherName == "aes-256-ecb" || cipherName == "bf-ecb" || cipherName == "cast5-ecb" || cipherName == "rc2-ecb" || cipherName == "aria-128-ecb" || cipherName == "aria-192-ecb" || cipherName == "aria-256-ecb" || cipherName == "camellia-128-ecb" || cipherName == "camellia-192-ecb" || cipherName == "camellia-256-ecb" || cipherName == "sm4-ecb"
-	isCTR := stringsHasSuffix(cipherName, "-ctr") || cipherName == "aes-128-ctr" || cipherName == "aes-192-ctr" || cipherName == "aes-256-ctr" || cipherName == "aria-128-ctr" || cipherName == "aria-192-ctr" || cipherName == "aria-256-ctr" || cipherName == "camellia-128-ctr" || cipherName == "camellia-192-ctr" || cipherName == "camellia-256-ctr" || cipherName == "sm4-ctr"
-	isCFB := stringsHasSuffix(cipherName, "-cfb") || stringsHasSuffix(cipherName, "-cfb1") || stringsHasSuffix(cipherName, "-cfb8") || cipherName == "des-cfb" || cipherName == "des-cfb1" || cipherName == "des-cfb8" || cipherName == "bf-cfb" || cipherName == "cast5-cfb" || cipherName == "rc2-cfb" || cipherName == "aria-128-cfb" || cipherName == "aria-192-cfb" || cipherName == "aria-256-cfb" || cipherName == "camellia-128-cfb" || cipherName == "camellia-192-cfb" || cipherName == "camellia-256-cfb" || cipherName == "sm4-cfb"
-	isOFB := stringsHasSuffix(cipherName, "-ofb") || cipherName == "des-ofb" || cipherName == "bf-ofb" || cipherName == "cast5-ofb" || cipherName == "rc2-ofb" || cipherName == "aria-128-ofb" || cipherName == "aria-192-ofb" || cipherName == "aria-256-ofb" || cipherName == "camellia-128-ofb" || cipherName == "camellia-192-ofb" || cipherName == "camellia-256-ofb" || cipherName == "sm4-ofb"
+	isECB := stringsHasSuffix(cipherName, "-ecb") || cipherName == "des-ecb" || cipherName == "aes-128-ecb" || cipherName == "aes-192-ecb" || cipherName == "aes-256-ecb" || cipherName == "bf-ecb" || cipherName == "cast5-ecb" || cipherName == "rc2-ecb" || cipherName == "aria-128-ecb" || cipherName == "aria-192-ecb" || cipherName == "aria-256-ecb" || cipherName == "camellia-128-ecb" || cipherName == "camellia-192-ecb" || cipherName == "camellia-256-ecb" || cipherName == "sm4-ecb" || cipherName == "seed-ecb"
+	isCTR := stringsHasSuffix(cipherName, "-ctr") || cipherName == "aes-128-ctr" || cipherName == "aes-192-ctr" || cipherName == "aes-256-ctr" || cipherName == "aria-128-ctr" || cipherName == "aria-192-ctr" || cipherName == "aria-256-ctr" || cipherName == "camellia-128-ctr" || cipherName == "camellia-192-ctr" || cipherName == "camellia-256-ctr" || cipherName == "sm4-ctr" || cipherName == "seed-ctr"
+	isCFB := stringsHasSuffix(cipherName, "-cfb") || stringsHasSuffix(cipherName, "-cfb1") || stringsHasSuffix(cipherName, "-cfb8") || cipherName == "des-cfb" || cipherName == "des-cfb1" || cipherName == "des-cfb8" || cipherName == "bf-cfb" || cipherName == "cast5-cfb" || cipherName == "rc2-cfb" || cipherName == "aria-128-cfb" || cipherName == "aria-192-cfb" || cipherName == "aria-256-cfb" || cipherName == "camellia-128-cfb" || cipherName == "camellia-192-cfb" || cipherName == "camellia-256-cfb" || cipherName == "sm4-cfb" || cipherName == "seed-cfb"
+	isOFB := stringsHasSuffix(cipherName, "-ofb") || cipherName == "des-ofb" || cipherName == "bf-ofb" || cipherName == "cast5-ofb" || cipherName == "rc2-ofb" || cipherName == "aria-128-ofb" || cipherName == "aria-192-ofb" || cipherName == "aria-256-ofb" || cipherName == "camellia-128-ofb" || cipherName == "camellia-192-ofb" || cipherName == "camellia-256-ofb" || cipherName == "sm4-ofb" || cipherName == "seed-ofb"
 
 	switch {
 	case isECB:
@@ -702,13 +715,13 @@ func main() {
 	flag.IntVar(&config.PBKDF2Iterations, "iter", 10000, "PBKDF2 iteration count")
 	flag.BoolVar(&config.AutoDetect, "auto", true, "Auto-detect key derivation method (try both)")
 	flag.BoolVar(&config.StrictMode, "strict", true, "Use strict validation (95%% printable, validate small files)")
-	flag.StringVar(&config.Cipher, "cipher", "aes-256-cbc", "Cipher algorithm (e.g., aes-256-cbc, des3, bf, rc4)")
+	flag.StringVar(&config.Cipher, "cipher", "aes-256-cbc", "Cipher algorithm (e.g., aes-256-cbc, des3, bf, rc4, seed)")
 	flag.Parse()
 
 	if *version {
 		fmt.Printf("%s v%s (%s)\n", AppName, Version, VersionDate)
 		fmt.Printf("Built with Go %s\n", runtime.Version())
-		fmt.Printf("Supported ciphers: AES, ARIA, Camellia, SM4, Blowfish, DES, 3DES, CAST5, RC2, RC4\n")
+		fmt.Printf("Supported ciphers: AES, ARIA, Camellia, SEED, SM4, Blowfish, DES, 3DES, CAST5, RC2, RC4\n")
 		os.Exit(0)
 	}
 	
@@ -743,6 +756,8 @@ func main() {
 		fmt.Println("  - camellia-128-ecb, camellia-192-ecb, camellia-256-ecb")
 		fmt.Println("  - camellia-128-ofb, camellia-192-ofb, camellia-256-ofb")
 		fmt.Println("  - camellia-128-cfb, camellia-192-cfb, camellia-256-cfb")
+		fmt.Println("\nSEED:")
+		fmt.Println("  - seed, seed-cbc, seed-ctr, seed-ecb, seed-cfb, seed-ofb")
 		fmt.Println("\nSM4 (requer a biblioteca gmsm):")
 		fmt.Println("  - sm4, sm4-cbc, sm4-ctr, sm4-ecb, sm4-cfb, sm4-ofb")
 		fmt.Println("\nBlowfish:")
