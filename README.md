@@ -49,6 +49,8 @@ Ferramenta de recuperação de senhas para arquivos criptografados com OpenSSL, 
 ./bruteforce -file segredo.enc -pbkdf2 -min 4 -max 6
 ```
 
+Confira também: https://github.com/pedroalbanese/bruteforce-hash-openssl
+
 ## License
 
 This project is licensed under the ISC License.
